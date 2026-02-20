@@ -1,6 +1,9 @@
 public enum TireType {
+    SNOW("Snow / Ice", 3, 10),
+    ASPHALT("Asphalt Hard", 6, 9),
+    INTER("Intermediate", 7, 7),
     GRAVEL("Gravel Soft", 8, 6),
-    ASPHALT("Asphalt Hard", 6, 9);
+    TARMAC("Tarmac Soft", 10, 12);
 
     final String label;
     final int gripBonus;

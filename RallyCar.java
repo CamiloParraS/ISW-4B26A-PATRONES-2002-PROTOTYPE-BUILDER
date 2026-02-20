@@ -50,7 +50,7 @@ public class RallyCar implements Cloneable {
         try {
             return (RallyCar) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Clone failed", e);
+            throw new RuntimeException("Clone failed, Hiii, how are you?", e);
         }
     }
 

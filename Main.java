@@ -211,14 +211,18 @@ public class Main {
         System.out.println(
             """
             Select engine:
-             [1] Stock 1.6T       (safe, low power)
-             [2] Performance 2.0T (balanced)
-             [3] Full Rally 2.0T  (max power, higher risk)"""
+            [1] Spec Homologation 1.2T  (minimum legal spec, very reliable, low power)
+            [2] Stock 1.6T              (safe, low power)
+            [3] Performance 2.0T        (balanced)
+            [4] Full Rally 2.0T         (max power, higher risk)
+            [5] Hybrid 2.0T+E           (highest power, moderate risk)"""
         );
         System.out.print("  Choice: ");
         return switch (sc.nextLine().trim()) {
-            case "2" -> EngineType.PERFORMANCE;
-            case "3" -> EngineType.RALLY;
+            case "1" -> EngineType.SPEC;
+            case "3" -> EngineType.PERFORMANCE;
+            case "4" -> EngineType.RALLY;
+            case "5" -> EngineType.HYBRID;
             default -> EngineType.STOCK;
         };
     }
@@ -227,13 +231,20 @@ public class Main {
         System.out.println(
             """
             Select tires:
-             [1] Gravel Soft  (more grip, higher wear)
-             [2] Asphalt Hard (less grip, more durable)"""
+             [1] Snow / Ice      (very low grip, high wear — winter stages)
+             [2] Asphalt Hard    (low grip, durable)
+             [3] Intermediate    (balanced across all surfaces)
+             [4] Gravel Soft     (good grip, moderate wear)
+             [5] Tarmac Soft     (maximum grip, very high wear)"""
         );
         System.out.print("  Choice: ");
-        return sc.nextLine().trim().equals("2")
-            ? TireType.ASPHALT
-            : TireType.GRAVEL;
+        return switch (sc.nextLine().trim()) {
+            case "1" -> TireType.SNOW;
+            case "2" -> TireType.ASPHALT;
+            case "3" -> TireType.INTER;
+            case "5" -> TireType.TARMAC;
+            default -> TireType.GRAVEL;
+        };
     }
 
     private static boolean pickTurbo() {
