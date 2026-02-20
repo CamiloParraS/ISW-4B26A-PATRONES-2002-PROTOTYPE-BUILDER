@@ -35,9 +35,9 @@ public class Main {
         System.out.println(
             """
                 MAIN MENU
-                [1] Builder   - build a custom car
-                [2] Prototype - clone an existing car
-                [3] Garage    - view all created cars
+                [1] Build a New Team          (Builder)
+                [2] Clone Setup for New Driver (Prototype)
+                [3] View Garage / Roster
                 [4] Exit
             """
         );
@@ -136,16 +136,10 @@ public class Main {
         System.out.print("\n  Driver A name: ");
         String driverA = sc.nextLine().trim();
         RallyCar carA = manager.cloneForDriver(driverA);
-
-        System.out.print("  Driver B name: ");
-        String driverB = sc.nextLine().trim();
-        RallyCar carB = manager.cloneForDriver(driverB);
+        RallyCar.addToGarage(carA);
 
         System.out.println("\n  === CLONED CAR - " + driverA + " ===");
         System.out.println(carA);
-
-        System.out.println("\n  === CLONED CAR - " + driverB + " ===");
-        System.out.println(carB);
 
         System.out.println(base);
         System.out.println();
