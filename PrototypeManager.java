@@ -7,13 +7,9 @@ public class PrototypeManager {
     }
 
     public RallyCar cloneForDriver(String driverName) {
-        return new RallyCar.Builder()
-            .teamName(baseConfig.getTeamName())
-            .driverName(driverName)
-            .engine(baseConfig.getEngine())
-            .tires(baseConfig.getTires())
-            .turboBoost(baseConfig.hasTurbo())
-            .build();
+        RallyCar cloned = baseConfig.clone(); // true prototype clone
+        cloned.setDriverName(driverName);
+        return cloned;
     }
 
     public RallyCar getBase() {
