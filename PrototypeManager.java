@@ -7,7 +7,7 @@ public class PrototypeManager {
     }
 
     public RallyCar cloneForDriver(String driverName) {
-        RallyCar cloned = baseConfig.clone(); // true prototype clone
+        RallyCar cloned = baseConfig.clone();
         cloned.setDriverName(driverName);
         return cloned;
     }

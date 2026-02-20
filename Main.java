@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -14,7 +15,7 @@ public class Main {
 
             switch (choice) {
                 case "1" -> builder();
-                case "2" -> protoype();
+                case "2" -> prototype();
                 case "3" -> {
                     System.out.println("\n  Goodbye! \n");
                     running = false;
@@ -32,20 +33,17 @@ public class Main {
     private static void printMainMenu() {
         System.out.println(
             """
-                         MAIN MENU
-                         [1] Builder   – build a custom car
-                         [2] Prototype – clone a team base car
-                         [3] Exit
+                MAIN MENU
+                [1] Builder   – build a custom car
+                [2] Prototype – clone an existing car
+                [3] Exit
             """
         );
         System.out.print(" Choice: ");
     }
 
-    // ── Option 1 : BUILDER ────────────────────────────────────
-
+    // Builder Pattern
     private static void builder() {
-        System.out.println("\n  ── BUILDER PATTERN ──\n");
-
         System.out.print("  Team name   : ");
         String team = sc.nextLine().trim();
 
@@ -56,7 +54,6 @@ public class Main {
         TireType tires = pickTires();
         boolean turbo = pickTurbo();
 
-        // Build step-by-step using the Builder
         RallyCar car = new RallyCar.Builder()
             .teamName(team)
             .driverName(driver)
@@ -65,28 +62,52 @@ public class Main {
             .turboBoost(turbo)
             .build();
 
+        // Save to garage, later used for the prototype
+        RallyCar.addToGarage(car);
+
         System.out.println("\n  ── CAR BUILT SUCCESSFULLY ──");
         System.out.println(car);
         System.out.println();
     }
 
-    private static void protoype() {
-        System.out.println(
-            "A fixed M-Sport Ford base car is created once Two driver-specific clones are produced from it without changing the original"
-        );
+    // the protoype pattern
 
-        RallyCar teamBase = new RallyCar.Builder()
-            .teamName("M-Sport Ford")
-            .driverName("PROTOTYPE BASE")
-            .engine(EngineType.RALLY)
-            .tires(TireType.GRAVEL)
-            .turboBoost(true)
-            .build();
+    private static void prototype() {
+        List<RallyCar> garage = RallyCar.getGarage();
 
-        System.out.println("  Base prototype:");
-        System.out.println(teamBase);
+        RallyCar base;
 
-        PrototypeManager manager = new PrototypeManager(teamBase);
+        if (garage.isEmpty()) {
+            // No cars built yet
+            System.out.println(
+                "  No cars in garage yet. Using default M-Sport Ford base.\n"
+            );
+            base = new RallyCar.Builder()
+                .teamName("M-Sport Ford")
+                .driverName("PROTOTYPE BASE")
+                .engine(EngineType.RALLY)
+                .tires(TireType.GRAVEL)
+                .turboBoost(true)
+                .build();
+        } else {
+            System.out.println("  Select a base car from the garage:\n");
+            for (int i = 0; i < garage.size(); i++) {
+                System.out.printf(
+                    "  [%d] %s / %s%n",
+                    i + 1,
+                    garage.get(i).getTeamName(),
+                    garage.get(i).getDriverName()
+                );
+            }
+            System.out.print("\n  Choice: ");
+            int idx = parseIndex(sc.nextLine().trim(), garage.size());
+            base = garage.get(idx);
+        }
+
+        System.out.println("\n  Base car being cloned:");
+        System.out.println(base);
+
+        PrototypeManager manager = new PrototypeManager(base);
 
         System.out.print("\n  Driver A name: ");
         String driverA = sc.nextLine().trim();
@@ -102,9 +123,17 @@ public class Main {
         System.out.println("\n  ── CLONED CAR – " + driverB + " ──");
         System.out.println(carB);
 
-        System.out.println("\n  ── ORIGINAL PROTOTYPE (unchanged) ──");
-        System.out.println(teamBase);
+        System.out.println(base);
         System.out.println();
+    }
+
+    private static int parseIndex(String input, int max) {
+        try {
+            int i = Integer.parseInt(input) - 1;
+            if (i >= 0 && i < max) return i;
+        } catch (NumberFormatException ignored) {}
+        System.out.println("  Invalid choice, defaulting to first car.");
+        return 0;
     }
 
     private static EngineType pickEngine() {
