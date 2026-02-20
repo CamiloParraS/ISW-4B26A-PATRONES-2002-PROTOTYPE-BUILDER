@@ -16,7 +16,8 @@ public class Main {
             switch (choice) {
                 case "1" -> builder();
                 case "2" -> prototype();
-                case "3" -> {
+                case "3" -> viewGarage();
+                case "4" -> {
                     System.out.println("\n  Goodbye! \n");
                     running = false;
                 }
@@ -34,9 +35,10 @@ public class Main {
         System.out.println(
             """
                 MAIN MENU
-                [1] Builder   – build a custom car
-                [2] Prototype – clone an existing car
-                [3] Exit
+                [1] Builder   - build a custom car
+                [2] Prototype - clone an existing car
+                [3] Garage    - view all created cars
+                [4] Exit
             """
         );
         System.out.print(" Choice: ");
@@ -68,6 +70,25 @@ public class Main {
         System.out.println("\n  === CAR BUILT SUCCESSFULLY ===");
         System.out.println(car);
         System.out.println();
+        pause();
+    }
+
+    private static void viewGarage() {
+        System.out.println("\n === GARAGE === \n");
+        List<RallyCar> garage = RallyCar.getGarage();
+        if (garage.isEmpty()) {
+            System.out.println("   No cars built yet.");
+            return;
+        }
+        for (int i = 0; i < garage.size(); i++) {
+            String header = String.format("   === Car #%d ===", i + 1);
+            String footer = "   " + "=".repeat(header.trim().length());
+
+            System.out.println(header);
+            System.out.println(garage.get(i));
+            System.out.println(footer);
+        }
+        pause();
     }
 
     // the protoype pattern
