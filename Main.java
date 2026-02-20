@@ -65,7 +65,7 @@ public class Main {
         // Save to garage, later used for the prototype
         RallyCar.addToGarage(car);
 
-        System.out.println("\n  ── CAR BUILT SUCCESSFULLY ──");
+        System.out.println("\n  === CAR BUILT SUCCESSFULLY ===");
         System.out.println(car);
         System.out.println();
     }
@@ -91,6 +91,9 @@ public class Main {
                 .build();
         } else {
             System.out.println("  Select a base car from the garage:\n");
+            System.out.println(
+                "  [0] Default - M-Sport Ford / Full Rally 2.0T / Gravel / Turbo"
+            );
             for (int i = 0; i < garage.size(); i++) {
                 System.out.printf(
                     "  [%d] %s / %s%n",
@@ -117,14 +120,20 @@ public class Main {
         String driverB = sc.nextLine().trim();
         RallyCar carB = manager.cloneForDriver(driverB);
 
-        System.out.println("\n  ── CLONED CAR – " + driverA + " ──");
+        System.out.println("\n  === CLONED CAR - " + driverA + " ===");
         System.out.println(carA);
 
-        System.out.println("\n  ── CLONED CAR – " + driverB + " ──");
+        System.out.println("\n  === CLONED CAR - " + driverB + " ===");
         System.out.println(carB);
 
         System.out.println(base);
         System.out.println();
+        pause();
+    }
+
+    private static void pause() {
+        System.out.print("\n  Press ENTER to return to the menu...");
+        sc.nextLine();
     }
 
     private static int parseIndex(String input, int max) {
