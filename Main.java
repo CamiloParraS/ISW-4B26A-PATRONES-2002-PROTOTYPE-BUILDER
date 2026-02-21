@@ -17,7 +17,8 @@ public class Main {
                 case "1" -> builder();
                 case "2" -> prototype();
                 case "3" -> viewGarage();
-                case "4" -> {
+                case "4" -> runStage();
+                case "5" -> {
                     System.out.println("\n  Goodbye! \n");
                     running = false;
                 }
@@ -35,16 +36,17 @@ public class Main {
         System.out.println(
             """
                 MAIN MENU
-                [1] Build a New Team          (Builder)
-                [2] Clone Setup for New Driver (Prototype)
+                [1] Build a New Team           (Builder)
+                [2] Clone Setup for New Driver (Prototype, Add a driver for a Team)
                 [3] View Garage / Roster
-                [4] Exit
+                [4] Run Stage                  Run a stage with a car from the garage
+                [5] Exit
             """
         );
         System.out.print(" Choice: ");
     }
 
-    // Builder Pattern
+    // === Builder Pattern ======================
     private static void builder() {
         System.out.print("  Team name   : ");
         String team = sc.nextLine().trim();
@@ -73,6 +75,8 @@ public class Main {
         pause();
     }
 
+    // == GARAGE ======================
+
     private static void viewGarage() {
         System.out.println("\n === GARAGE === \n");
         List<RallyCar> garage = RallyCar.getGarage();
@@ -91,15 +95,13 @@ public class Main {
         pause();
     }
 
-    // the protoype pattern
+    // === the protoype pattern ======================
 
     private static void prototype() {
         List<RallyCar> garage = RallyCar.getGarage();
-
         RallyCar base;
 
         if (garage.isEmpty()) {
-            // No cars built yet
             System.out.println(
                 "  No cars in garage yet. Using default M-Sport Ford base.\n"
             );
@@ -111,7 +113,7 @@ public class Main {
                 .turboBoost(true)
                 .build();
         } else {
-            System.out.println("  Select a base car from the garage:\n");
+            System.out.println("  Select a base car to clone:\n");
             System.out.println(
                 "  [0] Default - M-Sport Ford / Full Rally 2.0T / Gravel / Turbo"
             );
@@ -124,27 +126,72 @@ public class Main {
                 );
             }
             System.out.print("\n  Choice: ");
-            int idx = parseIndex(sc.nextLine().trim(), garage.size());
-            base = garage.get(idx);
+            String input = sc.nextLine().trim();
+
+            if (input.equals("0")) {
+                base = new RallyCar.Builder()
+                    .teamName("M-Sport Ford")
+                    .driverName("PROTOTYPE BASE")
+                    .engine(EngineType.RALLY)
+                    .tires(TireType.GRAVEL)
+                    .turboBoost(true)
+                    .build();
+            } else {
+                int idx = parseIndex(input, garage.size());
+                base = garage.get(idx);
+            }
         }
 
-        System.out.println("\n  Base car being cloned:");
+        System.out.println("\n  Base car:");
         System.out.println(base);
 
         PrototypeManager manager = new PrototypeManager(base);
 
-        System.out.print("\n  Driver A name: ");
-        String driverA = sc.nextLine().trim();
-        RallyCar carA = manager.cloneForDriver(driverA);
-        RallyCar.addToGarage(carA);
+        System.out.print("\n  New driver name: ");
+        String driverName = sc.nextLine().trim();
 
-        System.out.println("\n  === CLONED CAR - " + driverA + " ===");
-        System.out.println(carA);
+        RallyCar cloned = manager.cloneForDriver(driverName);
+        RallyCar.addToGarage(cloned);
 
-        System.out.println(base);
+        System.out.println("\n  === CAR CLONED SUCCESSFULLY ===");
+        System.out.println(cloned);
         System.out.println();
         pause();
     }
+
+    // === THE STAGE (YESSSSSSSSSSSSSSSSSSSSSs)
+
+    private static void runStage() {
+        List<RallyCar> garage = RallyCar.getGarage();
+        if (garage.isEmpty()) {
+            System.out.println(
+                "\n  No cars in garage yet. Build or clone a car first.\n"
+            );
+            pause();
+            return;
+        }
+
+        System.out.println("\n  Select a car to run the stage:\n");
+        for (int i = 0; i < garage.size(); i++) {
+            System.out.printf(
+                "  [%d] %s / %s%n",
+                i + 1,
+                garage.get(i).getTeamName(),
+                garage.get(i).getDriverName()
+            );
+        }
+        System.out.print("\n  Choice: ");
+        int idx = parseIndex(sc.nextLine().trim(), garage.size());
+        RallyCar car = garage.get(idx);
+
+        StageRunner.StageResult result = StageRunner.run(car, "Monte Carlo");
+
+        System.out.println("\n  === STAGE RESULT ===");
+        System.out.println(result);
+        pause();
+    }
+
+    // === EXTRA ===
 
     private static void pause() {
         System.out.print("\n  Press ENTER to return to the menu...");
